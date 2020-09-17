@@ -15,6 +15,11 @@ public class Calculator {
         return lineReadTemplate(filepath, mulCallback, 1);
     }
 
+    public String concatLines(String filepath) throws IOException {
+        LineReaderCallback<String> concatCallback = (line, value) -> value+line;
+        return lineReadTemplate(filepath, concatCallback, "");
+    }
+
     private <T> T lineReadTemplate(String filepath, LineReaderCallback<T> callback, T value) throws IOException {
         BufferedReader br = null;
         try{

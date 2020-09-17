@@ -28,4 +28,10 @@ public class CalculatorTest {
         int ret = calculator.calcMultiply(filepath);
         assertThat(ret, is(24));
     }
+
+    @Test
+    public void concatLinesTest() throws IOException{
+        String ret = calculator.concatLines(filepath);
+        assertThat(ret, is("1234"));
+    }
 }

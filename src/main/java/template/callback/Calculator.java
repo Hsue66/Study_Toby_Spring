@@ -15,4 +15,15 @@ public class Calculator {
         }
         return sum;
     }
+
+    public Integer calcMultiply(String filepath) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(filepath));
+
+        int sum=1;
+        String line;
+        while((line=br.readLine())!= null){
+            sum *= Integer.parseInt(line);
+        }
+        return sum;
+    }
 }

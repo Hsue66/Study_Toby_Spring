@@ -14,4 +14,11 @@ public class CalculatorTest {
         int sum = calculator.calcSum(getClass().getResource("numbers.txt").getPath());
         assertThat(sum, is(10));
     }
+
+    @Test
+    public void calcMultiplyTest() throws IOException {
+        Calculator calculator = new Calculator();
+        int ret = calculator.calcMultiply(getClass().getResource("numbers.txt").getPath());
+        assertThat(ret, is(24));
+    }
 }

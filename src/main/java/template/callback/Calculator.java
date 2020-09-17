@@ -6,16 +6,16 @@ import java.io.IOException;
 
 public class Calculator {
     public Integer calcSum(String filepath) throws IOException {
-        LineReaderCallback sumCallback = (line,value) -> value+Integer.parseInt(line);
+        LineReaderCallback<Integer> sumCallback = (line,value) -> value+Integer.parseInt(line);
         return lineReadTemplate(filepath, sumCallback, 0);
     }
 
     public Integer calcMultiply(String filepath) throws IOException {
-        LineReaderCallback mulCallback = (line, value) -> value*Integer.parseInt(line);
+        LineReaderCallback<Integer> mulCallback = (line, value) -> value*Integer.parseInt(line);
         return lineReadTemplate(filepath, mulCallback, 1);
     }
 
-    private Integer lineReadTemplate(String filepath, LineReaderCallback callback, int value) throws IOException {
+    private <T> T lineReadTemplate(String filepath, LineReaderCallback<T> callback, T value) throws IOException {
         BufferedReader br = null;
         try{
             br = new BufferedReader(new FileReader(filepath));

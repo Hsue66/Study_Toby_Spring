@@ -1,24 +1,31 @@
 package template.callback;
 
 
+import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CalculatorTest {
+    Calculator calculator;
+    String filepath;
+
+    @Before
+    public void setup(){
+        this.calculator = new Calculator();
+        this.filepath = getClass().getResource("numbers.txt").getPath();
+    }
 
     @Test
     public void calcSumTest() throws IOException {
-        Calculator calculator = new Calculator();
-        int sum = calculator.calcSum(getClass().getResource("numbers.txt").getPath());
+        int sum = calculator.calcSum(filepath);
         assertThat(sum, is(10));
     }
 
     @Test
     public void calcMultiplyTest() throws IOException {
-        Calculator calculator = new Calculator();
-        int ret = calculator.calcMultiply(getClass().getResource("numbers.txt").getPath());
+        int ret = calculator.calcMultiply(filepath);
         assertThat(ret, is(24));
     }
 }

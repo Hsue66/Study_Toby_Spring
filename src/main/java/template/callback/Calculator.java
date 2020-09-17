@@ -6,23 +6,12 @@ import java.io.IOException;
 
 public class Calculator {
     public Integer calcSum(String filepath) throws IOException {
-        LineReaderCallback sumCallback = new LineReaderCallback() {
-            @Override
-            public Integer doSomethingWithLine(String line, int value) {
-                System.out.println("calculate");
-                return value+Integer.parseInt(line);
-            }
-        };
+        LineReaderCallback sumCallback = (line,value) -> value+Integer.parseInt(line);
         return lineReadTemplate(filepath, sumCallback, 0);
     }
 
     public Integer calcMultiply(String filepath) throws IOException {
-        LineReaderCallback mulCallback = new LineReaderCallback() {
-            @Override
-            public Integer doSomethingWithLine(String line, int value) {
-                return value*Integer.parseInt(line);
-            }
-        };
+        LineReaderCallback mulCallback = (line, value) -> value*Integer.parseInt(line);
         return lineReadTemplate(filepath, mulCallback, 1);
     }
 

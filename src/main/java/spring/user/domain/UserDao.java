@@ -3,10 +3,10 @@ package spring.user.domain;
 import java.sql.*;
 
 public class UserDao {
-    SimpleConnectionMaker connectionMaker;
+    ConnectionMaker connectionMaker;
 
-    UserDao(){
-        this.connectionMaker = new SimpleConnectionMaker();
+    UserDao(ConnectionMaker connectionMaker){
+        this.connectionMaker = connectionMaker;
     }
 
     public void add(User user) throws SQLException, ClassNotFoundException {

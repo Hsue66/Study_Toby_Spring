@@ -2,7 +2,7 @@ package spring.user.domain;
 
 import java.sql.*;
 
-public class UserDao {
+public abstract class UserDao {
     public void add(User user) throws SQLException, ClassNotFoundException {
         Connection c = getConnection();
         PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
@@ -36,9 +36,5 @@ public class UserDao {
         return user;
     }
 
-    Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?serverTimezone=UTC","root","1234");
-        return c;
-    }
+    abstract Connection getConnection() throws ClassNotFoundException, SQLException ;
 }

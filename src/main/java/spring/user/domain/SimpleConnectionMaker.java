@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class kDao extends UserDao{
-    @Override
+public class SimpleConnectionMaker {
     Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?serverTimezone=UTC","root","1234");

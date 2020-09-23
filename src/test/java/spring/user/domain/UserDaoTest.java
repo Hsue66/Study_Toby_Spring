@@ -1,5 +1,6 @@
 package spring.user.domain;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -10,10 +11,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class UserDaoTest {
+    UserDao userDao;
+
+    @Before
+    public void setup(){
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        this.userDao = context.getBean("userDao",UserDao.class);
+    }
+
     @Test
     public void addAndGetTest() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao",UserDao.class);
+        userDao.delete();
+        assertThat(userDao.count(), is(0));
 
         User user = new User();
         user.setId("hsue");
@@ -21,18 +30,10 @@ public class UserDaoTest {
         user.setPassword("66");
 
         userDao.add(user);
+        assertThat(userDao.count(), is(1));
 
         User user1 = userDao.get(user.getId());
         assertThat(user1.getName(),is(user.getName()));
         assertThat(user1.getPassword(),is(user.getPassword()));
-    }
-
-    @Test
-    public void deleteCountTest() throws SQLException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDao",UserDao.class);
-
-        userDao.delete();
-        assertThat(userDao.count(), is(0));
     }
 }

@@ -1,16 +1,17 @@
 package spring.user.domain;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class UserDao {
-    ConnectionMaker connectionMaker;
+    DataSource dataSource;
 
-    UserDao(ConnectionMaker connectionMaker){
-        this.connectionMaker = connectionMaker;
+    public void setDataSource(DataSource dataSource){
+        this.dataSource = dataSource;
     }
 
     public void add(User user) throws SQLException, ClassNotFoundException {
-        Connection c = connectionMaker.getConnection();
+        Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
         ps.setString(1,user.getId());
         ps.setString(2,user.getName());
@@ -23,7 +24,7 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.getConnection();
+        Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("SELECT * FROM users WHERE id=?");
         ps.setString(1,id);
 

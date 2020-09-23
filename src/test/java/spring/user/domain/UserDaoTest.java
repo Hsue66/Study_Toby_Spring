@@ -26,4 +26,13 @@ public class UserDaoTest {
         assertThat(user1.getName(),is(user.getName()));
         assertThat(user1.getPassword(),is(user.getPassword()));
     }
+
+    @Test
+    public void deleteCountTest() throws SQLException {
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        UserDao userDao = context.getBean("userDao",UserDao.class);
+
+        userDao.delete();
+        assertThat(userDao.count(), is(0));
+    }
 }

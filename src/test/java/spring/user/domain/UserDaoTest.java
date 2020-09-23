@@ -24,10 +24,7 @@ public class UserDaoTest {
         userDao.delete();
         assertThat(userDao.count(), is(0));
 
-        User user = new User();
-        user.setId("hsue");
-        user.setName("Sumin Hong");
-        user.setPassword("66");
+        User user = new User("hsue","Sumin Hong","66");
 
         userDao.add(user);
         assertThat(userDao.count(), is(1));

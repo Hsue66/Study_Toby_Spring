@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
@@ -17,13 +19,13 @@ public class UserDaoTest {
 
     @Before
     public void setup(){
-        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+        ApplicationContext context = new GenericXmlApplicationContext("applicationContext.xml"); //new AnnotationConfigApplicationContext(DaoFactory.class);
         this.userDao = context.getBean("userDao",UserDao.class);
         this.user = new User("hsue","Sumin Hong","66");
     }
 
     @Test
-    public void addAndGetTest() throws SQLException, ClassNotFoundException {
+    public void addAndGetTest() throws SQLException {
         userDao.delete();
         assertThat(userDao.count(), is(0));
 

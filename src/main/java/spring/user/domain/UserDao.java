@@ -23,35 +23,22 @@ public class UserDao {
     }
 
     public User get(String id) throws SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("SELECT * FROM users WHERE id=?");
-        ps.setString(1,id);
-
-        ResultSet rs = ps.executeQuery();
-        User user = null;
-        if(rs.next()) {
-            user = new User();
-            user.setId(rs.getString(1));
-            user.setName(rs.getString(2));
-            user.setPassword(rs.getString(3));
-        }
-
-        ps.close();
-        rs.close();
-        c.close();
-
-        if(user ==null) {
-            throw new EmptyResultDataAccessException(1);
-        }
-        return user;
+        return this.jdbcTemplate.queryForObject("SELECT * FROM users WHERE id=?",
+                new Object[]{id},
+                new RowMapper<User>() {
+                    @Override
+                    public User mapRow(ResultSet rs, int i) throws SQLException {
+                        User user = new User();
+                        user.setId(rs.getString("id"));
+                        user.setName(rs.getString("name"));
+                        user.setPassword(rs.getString("password"));
+                        return user;
+                    }
+                });
     }
 
     public int count() throws SQLException {
-        return this.jdbcTemplate.query("SELECT COUNT(*) FROM users",
-                rs -> {
-            rs.next();
-            return rs.getInt(1);
-        });
+        return this.jdbcTemplate.queryForInt("SELECT COUNT(*) FROM users");
     }
 
     public void delete() throws SQLException {

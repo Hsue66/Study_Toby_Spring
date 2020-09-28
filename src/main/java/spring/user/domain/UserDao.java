@@ -8,13 +8,16 @@ import java.sql.*;
 
 public class UserDao {
     DataSource dataSource;
+    JdbcContext jdbcContext;
 
     public void setDataSource(DataSource dataSource){
         this.dataSource = dataSource;
+        this.jdbcContext = new JdbcContext();
+        jdbcContext.setDataSource(dataSource);
     }
 
     public void add(final User user) throws SQLException {
-        jdbcContextWithStatementStrategy(c -> {
+        this.jdbcContext.workWithStatementStrategy(c -> {
             PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
 
             ps.setString(1,user.getId());
@@ -63,32 +66,7 @@ public class UserDao {
     }
 
     public void delete() throws SQLException {
-        jdbcContextWithStatementStrategy( c -> c.prepareStatement("DELETE FROM users"));
+        this.jdbcContext.workWithStatementStrategy(c -> c.prepareStatement("DELETE FROM users"));
     }
 
-    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-        Connection c = null;
-        PreparedStatement ps = null;
-        try{
-            c = dataSource.getConnection();
-            ps = stmt.makePrepareStatement(c);
-            ps.executeUpdate();
-
-        }catch(SQLException ex){
-            throw ex;
-        }finally {
-            if(ps!=null){
-                try {
-                    ps.close();
-                }
-                catch(SQLException ex){}
-            }
-            if(c!=null){
-                try {
-                    ps.close();
-                }
-                catch(SQLException ex){}
-            }
-        }
-    }
 }

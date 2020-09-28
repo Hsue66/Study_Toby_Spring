@@ -50,6 +50,8 @@ public class UserDaoTest {
     @Test
     public void getAllTest(){
         userDao.delete();
+        List<User> users0 = userDao.getAll();
+        assertThat(users0.size(), is(0));
 
         userDao.add(user1);
         List<User> users1 = userDao.getAll();

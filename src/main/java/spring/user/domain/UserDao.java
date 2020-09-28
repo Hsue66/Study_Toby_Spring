@@ -10,13 +10,21 @@ import java.sql.*;
 import java.util.List;
 
 public class UserDao {
-    DataSource dataSource;
     JdbcTemplate jdbcTemplate;
 
+    RowMapper<User> userMapper = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int i) throws SQLException {
+            User user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        }
+    };
+
     public void setDataSource(DataSource dataSource){
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate();
-        jdbcTemplate.setDataSource(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public void add(final User user) {
@@ -25,30 +33,11 @@ public class UserDao {
 
     public User get(String id) {
         return this.jdbcTemplate.queryForObject("SELECT * FROM users WHERE id=?",
-                new Object[]{id},
-                new RowMapper<User>() {
-                    @Override
-                    public User mapRow(ResultSet rs, int i) throws SQLException {
-                        User user = new User();
-                        user.setId(rs.getString("id"));
-                        user.setName(rs.getString("name"));
-                        user.setPassword(rs.getString("password"));
-                        return user;
-                    }
-                });
+                new Object[]{id}, this.userMapper);
     }
 
     public List<User> getAll(){
-        return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id", new Object[]{}, new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int i) throws SQLException {
-                User user = new User();
-                user.setId(rs.getString("id"));
-                user.setName(rs.getString("name"));
-                user.setPassword(rs.getString("password"));
-                return user;
-            }
-        });
+        return this.jdbcTemplate.query("SELECT * FROM users ORDER BY id", new Object[]{}, this.userMapper);
     }
 
     public int count() {

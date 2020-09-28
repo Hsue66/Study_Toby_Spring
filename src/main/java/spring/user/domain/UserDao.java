@@ -3,6 +3,7 @@ package spring.user.domain;
 import com.mysql.cj.protocol.Resultset;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -46,17 +47,11 @@ public class UserDao {
     }
 
     public int count() throws SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("SELECT COUNT(*) FROM users");
-
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        int cnt = rs.getInt(1);
-
-        rs.close();
-        ps.close();
-        c.close();
-        return cnt;
+        return this.jdbcTemplate.query("SELECT COUNT(*) FROM users",
+                rs -> {
+            rs.next();
+            return rs.getInt(1);
+        });
     }
 
     public void delete() throws SQLException {

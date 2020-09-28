@@ -6,7 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import javax.sql.DataSource;
 import java.sql.*;
 
-public abstract class UserDao {
+public class UserDao {
     DataSource dataSource;
 
     public void setDataSource(DataSource dataSource){
@@ -18,7 +18,8 @@ public abstract class UserDao {
         PreparedStatement ps = null;
         try{
             c = dataSource.getConnection();
-            ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
+            StatementStrategy stmt = new AddStatement();
+            ps = stmt.makePrepareStatement(c);
             ps.setString(1,user.getId());
             ps.setString(2,user.getName());
             ps.setString(3,user.getPassword());
@@ -85,7 +86,8 @@ public abstract class UserDao {
         PreparedStatement ps = null;
         try{
             c = dataSource.getConnection();
-            ps = makePrepareStatement(c);
+            StatementStrategy stmt = new DeleteAllStatement();
+            ps = stmt.makePrepareStatement(c);
             ps.executeUpdate();
 
         }catch(SQLException ex){
@@ -105,6 +107,4 @@ public abstract class UserDao {
             }
         }
     }
-
-    public abstract PreparedStatement makePrepareStatement(Connection c) throws SQLException;
 }

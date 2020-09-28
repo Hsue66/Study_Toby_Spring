@@ -17,10 +17,16 @@ public class UserDaoTest {
 
     @Before
     public void setup(){
-        this.userDao = new UserDao();
+        //this.userDao = new UserDao();
         DataSource dataSource = new SingleConnectionDataSource("jdbc:mysql://localhost/springbook?serverTimezone=UTC","root","1234",true);
         userDao.setDataSource(dataSource);
         this.user = new User("hsue","Sumin Hong","66");
+    }
+
+    @Test
+    public void deleteTest() throws SQLException {
+        this.userDao = new UserDaoDeleteAll();
+        userDao.delete();
     }
 
     @Test

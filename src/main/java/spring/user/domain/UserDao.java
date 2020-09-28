@@ -14,33 +14,18 @@ public class UserDao {
     }
 
     public void add(User user) throws SQLException {
-        Connection c = null;
-        PreparedStatement ps = null;
-        try{
-            c = dataSource.getConnection();
-            StatementStrategy stmt = new AddStatement();
-            ps = stmt.makePrepareStatement(c);
-            ps.setString(1,user.getId());
-            ps.setString(2,user.getName());
-            ps.setString(3,user.getPassword());
+        StatementStrategy stmt = new StatementStrategy() {
+            @Override
+            public PreparedStatement makePrepareStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
 
-            ps.executeUpdate();
-        }catch(SQLException ex){
-            throw ex;
-        }finally {
-            if(ps!=null){
-                try {
-                    ps.close();
-                }
-                catch(SQLException ex){}
+                ps.setString(1,user.getId());
+                ps.setString(2,user.getName());
+                ps.setString(3,user.getPassword());
+                return ps;
             }
-            if(c!=null){
-                try {
-                    ps.close();
-                }
-                catch(SQLException ex){}
-            }
-        }
+        };
+        jdbcContextWithStatementStrategy(stmt);
     }
 
     public User get(String id) throws SQLException {
@@ -82,7 +67,12 @@ public class UserDao {
     }
 
     public void delete() throws SQLException {
-        StatementStrategy stmt = new DeleteAllStatement();
+        StatementStrategy stmt = new StatementStrategy() {
+            @Override
+            public PreparedStatement makePrepareStatement(Connection c) throws SQLException {
+                return c.prepareStatement("DELETE FROM users");
+            }
+        };
         jdbcContextWithStatementStrategy(stmt);
     }
 

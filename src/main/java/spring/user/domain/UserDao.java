@@ -2,29 +2,23 @@ package spring.user.domain;
 
 import com.mysql.cj.protocol.Resultset;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.*;
 
 public class UserDao {
     DataSource dataSource;
-    JdbcContext jdbcContext;
+    JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource){
         this.dataSource = dataSource;
-        this.jdbcContext = new JdbcContext();
-        jdbcContext.setDataSource(dataSource);
+        this.jdbcTemplate = new JdbcTemplate();
+        jdbcTemplate.setDataSource(dataSource);
     }
 
     public void add(final User user) throws SQLException {
-        this.jdbcContext.workWithStatementStrategy(c -> {
-            PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
-
-            ps.setString(1,user.getId());
-            ps.setString(2,user.getName());
-            ps.setString(3,user.getPassword());
-            return ps;
-        });
+        this.jdbcTemplate.update("INSERT INTO users (id,name,password) VALUES (?,?,?)",user.getId(),user.getName(),user.getPassword());
     }
 
     public User get(String id) throws SQLException {
@@ -66,7 +60,6 @@ public class UserDao {
     }
 
     public void delete() throws SQLException {
-        this.jdbcContext.workWithStatementStrategy(c -> c.prepareStatement("DELETE FROM users"));
+        this.jdbcTemplate.update("DELETE FROM users");
     }
-
 }

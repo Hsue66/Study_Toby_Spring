@@ -14,16 +14,32 @@ public class UserDao {
     }
 
     public void add(User user) throws SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
-        ps.setString(1,user.getId());
-        ps.setString(2,user.getName());
-        ps.setString(3,user.getPassword());
+        Connection c = null;
+        PreparedStatement ps = null;
+        try{
+            c = dataSource.getConnection();
+            ps = c.prepareStatement("INSERT INTO users (id,name,password) VALUES (?,?,?)");
+            ps.setString(1,user.getId());
+            ps.setString(2,user.getName());
+            ps.setString(3,user.getPassword());
 
-        ps.executeUpdate();
-
-        ps.close();
-        c.close();
+            ps.executeUpdate();
+        }catch(SQLException ex){
+            throw ex;
+        }finally {
+            if(ps!=null){
+                try {
+                    ps.close();
+                }
+                catch(SQLException ex){}
+            }
+            if(c!=null){
+                try {
+                    ps.close();
+                }
+                catch(SQLException ex){}
+            }
+        }
     }
 
     public User get(String id) throws SQLException {
@@ -65,11 +81,28 @@ public class UserDao {
     }
 
     public void delete() throws SQLException {
-        Connection c = dataSource.getConnection();
-        PreparedStatement ps = c.prepareStatement("DELETE FROM users");
+        Connection c = null;
+        PreparedStatement ps = null;
+        try{
+            c = dataSource.getConnection();
+            ps = c.prepareStatement("DELETE FROM users");
+            ps.executeUpdate();
 
-        ps.executeUpdate();
-        ps.close();
-        c.close();
+        }catch(SQLException ex){
+            throw ex;
+        }finally {
+            if(ps!=null){
+                try {
+                    ps.close();
+                }
+                catch(SQLException ex){}
+            }
+            if(c!=null){
+                try {
+                    ps.close();
+                }
+                catch(SQLException ex){}
+            }
+        }
     }
 }
